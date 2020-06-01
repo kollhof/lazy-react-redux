@@ -1,0 +1,61 @@
+{describe, it, expect, to_equal} = import '@fink/jest'
+
+React = import 'react'
+{Fragment} = import 'react'
+{createStore} = import 'redux'
+{render, fireEvent} = import '@testing-library/react'
+
+{Redux, Reducer, reducer, use_dispatch, use_state, lazy_store_reducer} = import '.'
+
+
+test_reducer = reducer {count: 0}, dict:
+  'test/action': fn state, {button}:
+    match button:
+      1: {...state, count: state.count + 1}
+      else: state
+
+
+test_action = fn button: dict:
+  type: 'test/action'
+  button
+
+
+TestApp = fn:
+  state = use_state _
+  dispatch = use_dispatch _
+
+  <Fragment>
+    <Reducer path="test" reducer={test_reducer} />
+
+    <button onClick={fn: dispatch test_action 1}>button 1</button>
+    <button onClick={fn: dispatch test_action 2}>button 2</button>
+
+    <div>clicks:
+      {
+        match state:
+          {test: {count: {}}}: state.test.count
+          else: ''
+      }
+    </div>
+  </Fragment>
+
+
+TestAppLoader = fn {store}:
+  <Redux store={store}>
+    <TestApp />
+  </Redux>
+
+
+describe 'lazy-redux', fn:
+  it 'adds reducers', fn:
+    store = createStore (lazy_store_reducer _), {}
+
+    {getByText} = render (<TestAppLoader store={store} />)
+
+    fireEvent.click getByText 'button 1'
+    fireEvent.click getByText 'button 2'
+
+    expect
+      not not getByText rx/clicks: 1/
+      to_equal true
+
