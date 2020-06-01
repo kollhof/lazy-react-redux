@@ -1,0 +1,119 @@
+React = import 'react'
+{createContext, useContext, useEffect, useState, Fragment} = import 'react'
+
+
+process_reducers = fn registry, state, action:
+  pipe registry:
+    fold [path, reducer], curr_state=state:
+      {(path): path_state} = curr_state
+      reduced_state = reducer path_state, action
+
+      match reduced_state:
+        path_state:
+          curr_state
+        else:
+          {...curr_state, (path): reduced_state}
+
+
+lazy_store_reducer = fn:
+  reducer_registry = []
+
+  fn state, action:
+    next_state = match action.type:
+      'lazy-redux/add-reducer':
+        # TODO: any way to not use mutable e.g. store.replaceReducer
+        reducer_registry.push [action.path, action.reducer]
+        state
+      else:
+        state
+
+    process_reducers reducer_registry, next_state, action
+
+
+
+redux_ctx = createContext _
+
+
+---
+Return the store's `dispatch` func, to dispatch actions.
+---
+use_dispatch = fn:
+  {dispatch} = useContext redux_ctx
+  dispatch
+
+
+
+---
+Return the store's current`state`.
+---
+use_state = fn:
+  {state} = useContext redux_ctx
+  state
+
+
+
+---
+Context provider makinging a redux `store` availble to child components.
+---
+Redux = fn {store, children}:
+  [state, update_state] = useState fn: store.getState _
+  useEffect
+    fn:
+      store.subscribe fn:
+        update_state store.getState _
+    [store]
+
+  {dispatch} = store
+  {Provider} = redux_ctx
+
+  <Provider value={{state, dispatch}}>
+    {children}
+  </Provider>
+
+
+
+---
+Register a `reducer` with a lazy-store at the given `path`.
+---
+add_reducer = fn reducer, path:
+  dict:
+    type: 'lazy-redux/add-reducer'
+    path
+    reducer
+
+
+
+---
+Register a lazy `reducer` with the redux store in the current context
+at the given `path`.
+
+Once the `reducer` is registered, it initial state is merged into the
+store and it is ready to be used.
+---
+Reducer = fn {path, reducer, children}:
+  dispatch = use_dispatch _
+
+  useEffect
+    fn:
+      dispatch add_reducer reducer, path
+      # TODO: add a no_result to something like @fink/js-compat
+      undefined
+
+    [path, reducer, dispatch]
+
+  <Fragment>{children}</Fragment>
+
+
+
+---
+Create a reducer with an `init_state` and an action map continging reducer
+functions.
+---
+reducer = fn init_state, reducers: fn state=init_state, action:
+  reduce = reducers.(action.type)
+
+  match reduce:
+    {}:
+      reduce state, action
+    else:
+      state
