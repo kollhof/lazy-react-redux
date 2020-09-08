@@ -32,25 +32,29 @@
     "redux": ">=4.0.0"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.10.2",
-    "@babel/preset-react": "^7.10.1",
+    "@babel/preset-env": "^7.10.4",
+    "@babel/preset-react": "^7.10.4",
     "@fink/cli": "^6.0.0",
     "@fink/jest": "^5.0.0",
-    "@fink/larix": "^10.0.1",
-    "@fink/loxia": "^10.1.1",
-    "@testing-library/react": "^10.0.4",
+    "@fink/larix": "^12.2.0",
+    "@fink/loxia": "^12.2.0",
+    "@testing-library/react": "^11.0.0",
     "commitizen": "^4.0.5",
     "cz-conventional-changelog": "^3.1.0",
-    "jest-cli": "^26.0.0",
+    "jest-cli": "^26.1.0",
     "npx-run": "^2.1.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "redux": "^4.0.5",
-    "semantic-release": "^17.0.7"
+    "semantic-release": "^17.1.1"
   },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "dependencies": {
+    "@fink/js-interop": "^1.1.1",
+    "@fink/std-lib": "^4.0.0"
   }
 }

@@ -4,6 +4,7 @@ React = import 'react'
 {Fragment} = import 'react'
 {createStore} = import 'redux'
 {render, fireEvent} = import '@testing-library/react'
+{rx} = import '@fink/std-lib/regex'
 
 {Redux, Reducer, reducer, use_dispatch, use_state, lazy_store_reducer} = import '.'
 
@@ -30,8 +31,7 @@ TestApp = fn:
     <button onClick={fn: dispatch test_action 1}>button 1</button>
     <button onClick={fn: dispatch test_action 2}>button 2</button>
 
-    <div>clicks:
-      {
+    <div>clicks: {
         match state:
           {test: {count: {}}}: state.test.count
           else: ''
@@ -56,6 +56,6 @@ describe 'lazy-redux', fn:
     fireEvent.click getByText 'button 2'
 
     expect
-      not not getByText rx/clicks: 1/
+      not not getByText rx'clicks: 1'
       to_equal true
 
