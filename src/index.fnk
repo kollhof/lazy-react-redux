@@ -1,6 +1,5 @@
-React = import 'react'
-{createContext, useContext, useEffect, useState, Fragment} = import 'react'
-{undefined} = import '@fink/js-interop/nullish'
+{createContext, useContext, useEffect, useState} = import 'react'
+{undefined} = import '@fink/js-interop/nullish.fnk'
 
 
 process_reducers = fn registry, state, action:
@@ -102,7 +101,7 @@ Reducer = fn {path, reducer, children}:
 
     [path, reducer, dispatch]
 
-  <Fragment>{children}</Fragment>
+  <>{children}</>
 
 
 
