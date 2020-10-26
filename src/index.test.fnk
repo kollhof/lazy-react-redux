@@ -1,12 +1,13 @@
-{describe, it, expect, to_equal} = import '@fink/jest'
+{describe, it, expect, to_equal} = import '@fink/jest/test.fnk'
 
 React = import 'react'
 {Fragment} = import 'react'
 {createStore} = import 'redux'
 {render, fireEvent} = import '@testing-library/react'
-{rx} = import '@fink/std-lib/regex'
+{rx} = import '@fink/std-lib/regex.fnk'
 
-{Redux, Reducer, reducer, use_dispatch, use_state, lazy_store_reducer} = import '.'
+
+{Redux, Reducer, reducer, use_dispatch, use_state, lazy_store_reducer} = import './index.fnk'
 
 
 test_reducer = reducer {count: 0}, dict:
