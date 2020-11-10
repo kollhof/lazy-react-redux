@@ -10,14 +10,14 @@ React = import 'react'
 {Redux, Reducer, reducer, use_dispatch, use_state, lazy_store_reducer} = import './index.fnk'
 
 
-test_reducer = reducer {count: 0}, dict:
+test_reducer = reducer {count: 0}, rec:
   'test/action': fn state, {button}:
     match button:
       1: {...state, count: state.count + 1}
       else: state
 
 
-test_action = fn button: dict:
+test_action = fn button: rec:
   type: 'test/action'
   button
 

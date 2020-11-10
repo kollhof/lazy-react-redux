@@ -2,6 +2,7 @@
 {undefined} = import '@fink/js-interop/nullish.fnk'
 
 
+
 process_reducers = fn registry, state, action:
   pipe registry:
     fold [path, reducer], curr_state=state:
@@ -13,6 +14,7 @@ process_reducers = fn registry, state, action:
           curr_state
         else:
           {...curr_state, (path): reduced_state}
+
 
 
 lazy_store_reducer = fn:
@@ -76,7 +78,7 @@ Redux = fn {store, children}:
 Register a `reducer` with a lazy-store at the given `path`.
 ---
 add_reducer = fn reducer, path:
-  dict:
+  rec:
     type: 'lazy-redux/add-reducer'
     path
     reducer
